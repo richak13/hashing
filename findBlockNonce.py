@@ -10,29 +10,24 @@ def mine_block(k, prev_hash, rand_lines):
         prev_hash - the hash of the previous block (bytes)
         rand_lines - a set of "transactions," i.e., data to be included in this block (list of strings)
 
-        This function finds a nonce such that sha256(prev_hash + rand_lines + nonce)
+        Complete this function to find a nonce such that 
+        sha256( prev_hash + rand_lines + nonce )
         has k trailing zeros in its *binary* representation
+
     """
-    # Prepare the data by concatenating prev_hash and all transactions as bytes
     data = prev_hash + ''.join(rand_lines).encode('utf-8')
 
-    nonce = 0  # Start nonce at zero and increment until a valid one is found
-    target_zeros = '0' * k  # Target k trailing zeros in the binary representation
-
+    nonce = 0
+    target_zeros = '0' * k
+    
     while True:
-        # Convert nonce to bytes
         nonce_bytes = nonce.to_bytes((nonce.bit_length() + 7) // 8, byteorder='big')
         
-        # Calculate SHA256 hash of the data concatenated with nonce
         hash_result = hashlib.sha256(data + nonce_bytes).hexdigest()
         
-        # Convert hash to binary and check the last k bits
         if bin(int(hash_result, 16))[-k:] == target_zeros:
             return nonce_bytes
-        
-        # Increment nonce and try again
         nonce += 1
-
 
 def get_random_lines(filename, quantity):
     """
